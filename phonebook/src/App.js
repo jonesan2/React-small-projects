@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Filter from './components/Filter';
 import AddForm from './components/AddForm';
 import People from './components/People';
+import personService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,12 +12,12 @@ const App = () => {
   const [ newFilter, setNewFilter ] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
-        setFilteredPersons(response.data);
-      })
+    personService
+      .getAll()
+      .then(allPersons => {
+        setPersons(allPersons);
+        setFilteredPersons(allPersons);
+      });
   }, []);
 
   const handleTyping = (setter) => (event) => {
@@ -33,15 +33,43 @@ const App = () => {
     const idx = persons.findIndex(person => person.name === newName);
 
     if (idx === -1) {
-      const newPersons = persons.concat({ name: newName, number: newNumber });
-      setPersons(newPersons);
-      setNewName('');
-      setNewNumber('');
-      setFilteredPersons(newPersons.filter(person => person.name.includes(newFilter)));
-    } else {
-      setNewName('');
-      setNewNumber('');
-      alert(`${newName} is already added to phonebook`);
+      personService
+        .create({ name: newName, number: newNumber })
+        .then(newPerson => {
+          const newPersons = persons.concat(newPerson);
+          setPersons(newPersons);
+          setNewName('');
+          setNewNumber('');
+          setFilteredPersons(newPersons.filter(person => person.name.includes(newFilter)));
+        });
+    } else if (window.confirm(
+      `${persons[idx].name} is already added to phonebook, replace the old number with a new one?`
+      )) {
+      personService
+        .update(persons[idx].id, { name: newName, number: newNumber })
+        .then(updatedPerson => {
+          const newPersons = persons
+            .filter(thisPerson => persons[idx].id !== thisPerson.id)
+            .concat(updatedPerson);
+          setPersons(newPersons);
+          setNewName('');
+          setNewNumber('');
+          setFilteredPersons(newPersons.filter(thisPerson => thisPerson.name.includes(newFilter)));
+        })
+    }
+  };
+
+  const handleDelete = (person) => () => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .deletePerson(person.id)
+        .then(deletedPerson => {
+          const newPersons = persons.filter(thisPerson => person.id !== thisPerson.id);
+          setPersons(newPersons);
+          setNewName('');
+          setNewNumber('');
+          setFilteredPersons(newPersons.filter(thisPerson => thisPerson.name.includes(newFilter)));
+        });
     }
   };
 
@@ -51,7 +79,7 @@ const App = () => {
       <Filter value={newFilter} onChange={handleTyping(setNewFilter)} />
       <AddForm handleSubmit={handleSubmit} newName={newName} handleTyping={handleTyping}
             setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
-      <People filteredPersons={filteredPersons} />
+      <People filteredPersons={filteredPersons} handler={handleDelete} />
     </div>
   );
 };
