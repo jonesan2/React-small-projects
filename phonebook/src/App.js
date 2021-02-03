@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import AddForm from './components/AddForm';
 import People from './components/People';
+import Notification from './components/Notification';
 import personService from './services/persons';
 
 const App = () => {
@@ -10,6 +11,10 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ newFilter, setNewFilter ] = useState('');
+  const [ notification, setNotification ] = useState({
+    message: null,
+    type: null
+  });
 
   useEffect(() => {
     personService
@@ -18,7 +23,7 @@ const App = () => {
         setPersons(allPersons);
         setFilteredPersons(allPersons);
       });
-  }, []);
+  }, [ notification ]);
 
   const handleTyping = (setter) => (event) => {
     setter(event.target.value);
@@ -41,6 +46,10 @@ const App = () => {
           setNewName('');
           setNewNumber('');
           setFilteredPersons(newPersons.filter(person => person.name.includes(newFilter)));
+          setNotification({ message: `Added ${newPerson.name}`, type: 'success' });
+          setTimeout(() => {
+            setNotification({ message: null, type: null });
+          }, 5000);
         });
     } else if (window.confirm(
       `${persons[idx].name} is already added to phonebook, replace the old number with a new one?`
@@ -55,6 +64,15 @@ const App = () => {
           setNewName('');
           setNewNumber('');
           setFilteredPersons(newPersons.filter(thisPerson => thisPerson.name.includes(newFilter)));
+        })
+        .catch(() => {
+          setNotification({
+            message: `Information on ${persons[idx].name} has already been removed from server`,
+            type: 'error'
+          });
+          setTimeout(() => {
+            setNotification({ message: null, type: null });
+          }, 5000);
         })
     }
   };
@@ -76,6 +94,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notifData={notification} />
       <Filter value={newFilter} onChange={handleTyping(setNewFilter)} />
       <AddForm handleSubmit={handleSubmit} newName={newName} handleTyping={handleTyping}
             setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} />
