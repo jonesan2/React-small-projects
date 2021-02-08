@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Note from './components/Note';
 import Notification from './components/Notification'
 import Footer from './components/Footer';
@@ -9,14 +8,14 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
   const [showAll, setShowAll] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('some error happened...');
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/notes')
-      .then(response => {
-        setNotes(response.data);
-      })
+    noteService
+      .getAll()
+      .then(initialNotes => {
+        setNotes(initialNotes)
+      });
   }, []);
 
   const addNote = (event) => {
@@ -38,14 +37,6 @@ const App = () => {
   const handleNoteChange = (event) => {
     setNewNote(event.target.value);
   };
-
-  useEffect(() => {
-    noteService
-      .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
-      });
-  }, []);
 
   const toggleImportanceOf = (id) => {
     const note = notes.find(n => n.id === id);
@@ -74,7 +65,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={successMessage} />
+      <Notification message={errorMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
