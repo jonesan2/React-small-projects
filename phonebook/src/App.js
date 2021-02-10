@@ -41,6 +41,10 @@ const App = () => {
       personService
         .create({ name: newName, number: newNumber })
         .then(newPerson => {
+          if (newPerson.error) {
+            throw(newPerson)
+          }
+          console.log('newPerson: ', newPerson);
           const newPersons = persons.concat(newPerson);
           setPersons(newPersons);
           setNewName('');
@@ -50,7 +54,13 @@ const App = () => {
           setTimeout(() => {
             setNotification({ message: null, type: null });
           }, 5000);
-        });
+        })
+        .catch(error => {
+          setNotification({ message: error.error, type: 'error' });
+          setTimeout(() => {
+            setNotification({ message: null, type: null });
+          }, 5000);
+        })
     } else if (window.confirm(
       `${persons[idx].name} is already added to phonebook, replace the old number with a new one?`
       )) {

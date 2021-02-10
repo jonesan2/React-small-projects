@@ -10,7 +10,8 @@ const getAll = () => {
 const create = (newPerson) => {
   return axios
     .post(baseUrl, newPerson)
-    .then(response => response.data);
+    .then(response => response.data)
+    .catch(error => error.response.data)
 };
 
 const update = (id, newPerson) => {
