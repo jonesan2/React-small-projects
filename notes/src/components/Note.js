@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Note = ({ note, toggleImportance }) => {
+  console.log('note: ', note);
   const label = note.important
     ? 'make not important' : 'make important';
 
