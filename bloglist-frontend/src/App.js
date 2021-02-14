@@ -25,6 +25,7 @@ const App = () => {
       blogs.sort(compareLikes)
       setBlogs( blogs )
     })
+    console.log('blogs: ', blogs);
   }, [])
 
   useEffect(() => {
@@ -169,15 +170,15 @@ const App = () => {
     </Togglable>
   )
 
-  const blogForm = () => (
+  const blogSection = () => (
     <div>
       <h2>blogs</h2>
       <Notification message={message} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       {newBlogForm()}
       {blogs.map(blog =>
-        <Blog key={blog._id}>
-          <p>{blog.title} {blog.author}</p>
+        <Blog key={blog._id} className="oneBlog">
+          <p className="titleauthor">{blog.title} {blog.author}</p>
           {blogDetailsForm(blog)}
           { user.username === blog.user.username ?
             <button className='remove' onClick={handleDelete(blog)}>remove</button> :
@@ -192,7 +193,7 @@ const App = () => {
     <div>
       { user === null ?
         loginForm() :
-        blogForm()
+        blogSection()
       }
     </div>
   )

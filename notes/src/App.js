@@ -129,12 +129,12 @@ const App = () => {
       <Notification message={errorMessage} />
 
       { user === null ?
-          loginForm() :
-          <div>
-            <p>{user.name} logged-in</p>
-            {noteForm()}
-          </div>
-      }      
+        loginForm() :
+        <div>
+          <p>{user.name} logged-in</p>
+          {noteForm()}
+        </div>
+      }
 
       <h2>Notes</h2>
 
@@ -144,8 +144,8 @@ const App = () => {
         </button>
       </div>
       <ul>
-        {notesToShow.map((note, i) => 
-          <Note 
+        {notesToShow.map((note, i) =>
+          <Note
             key={i}
             note={note}
             toggleImportance={() => toggleImportanceOf(note.id)}
