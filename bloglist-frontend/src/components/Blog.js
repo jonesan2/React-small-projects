@@ -1,8 +1,11 @@
 import React from 'react'
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
+
+const Blog = (props) => {
+  return (
+  <div className="blog">
+    {props.children}
   </div>
-)
+  )
+}
 
 export default Blog

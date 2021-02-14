@@ -25,5 +25,38 @@ const create = async (newBlog) => {
   return response.data
 }
 
-const blogs = { getAll, create, setToken }
+const update = async (updatedBlog) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const blogObject = {
+    likes: Number(updatedBlog.likes) + 1,
+    author: updatedBlog.author,
+    title: updatedBlog.title,
+    url: updatedBlog.url
+  }
+
+  const requestUrl = `${baseUrl}/${updatedBlog._id}`
+
+  const response = await axios.put(requestUrl, blogObject, config)
+  return response.data
+}
+
+const deleteBlog = async (blogObject) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const requestUrl = `${baseUrl}/${blogObject._id}`
+  const response = await axios.delete(requestUrl, config)
+  if (response.status === 204) {
+    return blogObject
+  } else {
+    return null
+  }
+}
+
+
+const blogs = { getAll, create, update, deleteBlog, setToken }
 export default blogs
