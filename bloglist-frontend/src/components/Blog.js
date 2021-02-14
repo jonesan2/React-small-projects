@@ -3,12 +3,6 @@ import Togglable from './Togglable'
 import BlogDetails from './BlogDetails'
 import blogService from '../services/blogs'
 
-const handleLike = (blogObject, updateLikes) => () => {
-  blogService
-    .update(blogObject)
-    .then(updateLikes)
-}
-
 const handleDelete = (blogObject, deleteBlog) => () => {
   if (window.confirm(`Remove blog ${blogObject.title} ${blogObject.author}`)) {
     blogService
@@ -19,11 +13,10 @@ const handleDelete = (blogObject, deleteBlog) => () => {
 
 const blogDetailsForm = (blog, updateLikes) => (
   <Togglable buttonLabel='show details'>
-    <BlogDetails>
-      <p>{blog.url}</p>
-      <p>likes {blog.likes} <button onClick={handleLike(blog, updateLikes)}>like</button></p>
-      <p>{blog.user.name}</p>
-    </BlogDetails>
+    <BlogDetails
+      blog={blog}
+      updateLikes={updateLikes}
+    />
   </Togglable>
 )
 
