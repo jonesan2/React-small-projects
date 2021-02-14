@@ -2,9 +2,9 @@ import React from 'react'
 
 const BlogDetails = (props) => {
   return (
-  <div>
-    {props.children}
-  </div>
+    <div>
+      {props.children}
+    </div>
   )
 }
 

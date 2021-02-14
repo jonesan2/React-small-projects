@@ -24,7 +24,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       blogs.sort(compareLikes)
       setBlogs( blogs )
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.removeItem('loggedBloglistappUser')
     blogService.setToken('')
     setUser(null)
@@ -123,7 +123,7 @@ const App = () => {
           setMessage({})
         }, 5000)
       })
-  } 
+  }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -131,7 +131,7 @@ const App = () => {
       <Notification message={message} />
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -140,7 +140,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -152,12 +152,12 @@ const App = () => {
   )
 
   const newBlogForm = () => {
-    console.log('user: ', user);
     return (
-    <Togglable buttonLabel='new blog' ref={blogFormRef}>
-      <BlogForm createBlog={addBlog} />
-    </Togglable>
-  )}
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
+        <BlogForm createBlog={addBlog} />
+      </Togglable>
+    )
+  }
 
   const blogDetailsForm = (blog) => (
     <Togglable buttonLabel='show details'>
@@ -174,7 +174,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message} />
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-      {newBlogForm()} 
+      {newBlogForm()}
       {blogs.map(blog =>
         <Blog key={blog._id}>
           <p>{blog.title} {blog.author}</p>

@@ -2,9 +2,9 @@ import React from 'react'
 
 const Blog = (props) => {
   return (
-  <div className="blog">
-    {props.children}
-  </div>
+    <div className="blog">
+      {props.children}
+    </div>
   )
 }
 
