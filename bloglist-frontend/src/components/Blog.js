@@ -28,7 +28,7 @@ const removeButton = (blog, username, deleteBlog) => (
 
 const Blog = ({ blog, username, updateLikes, deleteBlog }) => {
   return (
-    <div className="blog">
+    <div className="blogClass">
       <p className="titleauthor">{blog.title} {blog.author}</p>
       {blogDetailsForm(blog, updateLikes)}
       {removeButton(blog, username, deleteBlog)}

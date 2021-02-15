@@ -10,7 +10,7 @@ const BlogDetails = ({ blog, updateLikes }) => {
 
   return (
     <div>
-      <p>{blog.url}</p>
+      <p className="urlClass">{blog.url}</p>
       <p>likes {blog.likes} <button onClick={handleLike(blog, updateLikes)}>like</button></p>
       <p>{blog.user.name}</p>
     </div>

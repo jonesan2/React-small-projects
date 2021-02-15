@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Note from './components/Note';
+import React, { useState, useEffect, useRef } from 'react'
+import Note from './components/Note'
 import Notification from './components/Notification'
-import Footer from './components/Footer';
+import Footer from './components/Footer'
 import LoginForm from './components/LoginForm'
 import NoteForm from './components/NoteForm'
 import Togglable from './components/Togglable'
-import noteService from './services/notes';
-import loginService from './services/login';
+import noteService from './services/notes'
+import loginService from './services/login'
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
-  const [showAll, setShowAll] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  const [notes, setNotes] = useState([])
+  const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
-  
+
   const noteFormRef = useRef()
 
   useEffect(() => {
@@ -24,8 +24,8 @@ const App = () => {
       .getAll()
       .then(initialNotes => {
         setNotes(initialNotes)
-      });
-  }, []);
+      })
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
@@ -41,12 +41,12 @@ const App = () => {
     noteService
       .create(noteObject)
       .then(returnedNote => {
-        setNotes(notes.concat(returnedNote));
+        setNotes(notes.concat(returnedNote))
       })
   }
 
   const toggleImportanceOf = (id) => {
-    const note = notes.find(n => n.id === id);
+    const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
     noteService
@@ -54,20 +54,20 @@ const App = () => {
       .then(returnedNote => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
-      .catch(error => {
+      .catch(() => {
         setErrorMessage(
           `Note '${note.content}' was already removed from server`
         )
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setNotes(notes.filter(n => n.id !== id));
-      });
+        setNotes(notes.filter(n => n.id !== id))
+      })
   }
 
   const notesToShow = showAll
     ? notes
-    : notes.filter(note => note.important);
+    : notes.filter(note => note.important)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -154,7 +154,7 @@ const App = () => {
       </ul>
       <Footer />
     </div>
-  );
+  )
 }
 
 export default App
